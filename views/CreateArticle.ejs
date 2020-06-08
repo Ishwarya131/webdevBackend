@@ -1,0 +1,64 @@
+<%- include('MainPage.ejs'); -%>
+<html>
+    <head><title>Create Artcile</title></head>
+    <body>
+        <div id="formContent">
+      <input type="text" id="heading" style="height:150px; font-size:50px; width:100%; text-align:center" placeholder="Type Your Heading here..">
+      <textarea id="content" rows="5" style="height:60%; font-size:30px; width: 100%;" placeholder="Type Your content here ... "></textarea>
+      <input type="submit" value="Reset" onclick="reset()"> 
+      <input type="submit" value="preview" onclick="preview()"> 
+      
+    </div>
+    <div id="formPreview">
+
+    </div>
+      <script>
+          function preview(){
+            $('#formPreview').hide();
+              var heading= $("#heading").val();
+              var content= $("#content").val();
+              if(heading.length>0 && content.length>0){
+             var previewContent="<h1 id='head' style='text-align:center'>"+heading+"</h1>";
+             previewContent+="<br/><br/>";
+             previewContent+="<p id='body' style='font-size:30px'>"+content+"</p>";
+             previewContent+="<input type='submit' value='Save' onclick='save()'> "
+             previewContent+="<input type='submit' value='Back' onclick='back()'> "
+            $("#formContent").hide();
+            $('#formPreview').html("");
+             $('#formPreview').append(previewContent);
+             $('#formPreview').show();
+            $('#formPreview').display='block';
+              }
+              else{
+                  alert("heading and content cannot be blank");
+              }
+          }
+          function back(){
+            $('#formPreview').hide();
+            $("#formContent").show();
+          }
+          function save(){
+            var head= $('#head').text();
+            var body= $('#body').text();
+            var datas={'head':head, 'content':body};
+            $.ajax({
+                        url:"http://localhost:9000/save",
+                        type: "POST",
+                        data:datas,
+                        success: function(result){
+                            alert(result);
+                            reset();
+                            back();
+                            },
+                        error: function(error){
+                            alert(result);
+                        }
+                    })
+          }
+          function reset(){
+            $("#heading").val("");
+            $("#content").val("");
+          }
+      </script>
+    </body>
+</html>

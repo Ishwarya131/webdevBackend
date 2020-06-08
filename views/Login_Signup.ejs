@@ -1,0 +1,91 @@
+<html>
+<head><title>login/signup</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <style>
+        table {
+          font-family: arial, sans-serif;
+          font-size: medium;
+          border-collapse: collapse;
+          width: 100%;
+        }
+        
+        td, th {
+          border: 1px solid #dddddd;
+          text-align: left;
+          padding: 8px;
+          width: 50%
+        }
+        </style>
+</head>
+<body>
+<h1 style="text-align:center"><b> Welcome to Article Creation Page</b> </h1>
+
+ <table>
+ <tr></tr>
+ <tr>
+ <td>
+ <p><B>Existing user</B></p><br/>
+ <p> </B> Login </B></p>
+
+ Email: <input type="text" id="Lemail" name="email"> <br/><br/>
+Password: <input type="password" id="Lpassword" name="password"><br/><br/>
+   
+<input type="submit" value="Login" onclick="login()"> <br/>
+ </form>
+</td>
+<td>
+ <p><B>New user</B></p><br/>
+ <p> </B> Sign up </B></p>
+ 
+ name: <input type='text' id="Sname" name="name"> <br/><br/>
+ Email: <input type="text" id="Semail" name="email"> <br/><br/>
+Password: <input type="password" id="Spassword" name="password"><br/><br/>
+   
+<input type="submit" value="Signup" onclick="signUp()"> <br/>
+</form>
+</td>
+ </tr>
+ </table>
+<script>
+    function signUp(){
+        var name=$('#Sname').val();
+        var email=$('#Semail').val();
+        var password=$('#Spassword').val();
+        datas={'name':name,'email':email,'password':password};
+        $.ajax({
+url:"http://localhost:9000/register",
+type: "POST",
+data:datas,
+success: function(result){
+       alert(result);
+    },
+error: function(error){
+    alert(result);
+}
+})
+}
+
+function login(){
+        
+        var email=$('#Lemail').val();
+        var password=$('#Lpassword').val();
+        datas={'email':email,'password':password};
+        $.ajax({
+url:"http://localhost:9000/authenticate",
+type: "POST",
+data:datas,
+success: function(result){
+       alert(result);
+       if(result=='login successfull'){
+       window.location.href="http://localhost:9000/CreateArticle"
+       }
+    },
+error: function(error){
+    alert(result);
+}
+})
+}
+</script>
+
+</body>
+</html>

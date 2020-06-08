@@ -1,0 +1,67 @@
+<html>
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+<style>
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+}
+</style>
+<body>
+<div class="tab" style="width:100%">
+  <button  style="width:25%" onclick="redirect(1)">Create Article</button>
+  <button  style="width:25%" onclick="redirect(2)">View Profile</button>
+  <button  style="width:25%" onclick="redirect(3)">Search Profile</button>
+  <button  style="width:25%" onclick="redirect(4)">LogOut</button>
+
+</div>
+<script>
+  function redirect(a){
+    console.log("entered");
+    if(a==1){
+    window.location.href="http://localhost:9000/CreateArticle";}
+    else if(a==2){
+    window.location.href="http://localhost:9000/ViewProfile";}
+    else if(a==3){
+    window.location.href="http://localhost:9000/SearchProfile";
+    }
+    else{
+      window.location.href="http://localhost:9000/Login_Signup";
+    }
+
+  }
+</script>
+</body>
+</html>

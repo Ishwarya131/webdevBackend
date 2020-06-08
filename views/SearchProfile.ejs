@@ -1,0 +1,193 @@
+<%- include('MainPage.ejs'); -%>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Profile</title>
+    
+    
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+body {
+  font-family: Arial;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+#SearchVal{
+  padding: 10px;
+  font-size: 17px;
+  border: 1px solid grey;
+  float: left;
+  width: 80%;
+  background: #f1f1f1;
+}
+
+#Subbutton {
+  float: left;
+  width: 20%;
+  padding: 10px;
+  background: #2196F3;
+  color: white;
+  font-size: 17px;
+  border: 1px solid grey;
+  border-left: none;
+  cursor: pointer;
+}
+
+#Subbutton:hover {
+  background: #0b7dda;
+}
+
+
+</style>
+</head>
+<body>
+
+<h2>Search Profile</h2>
+
+
+
+<input  type="text" id="SearchVal" placeholder="Search Name" name="search">
+<button  type="submit" id="Subbutton" onclick="callDetail()"><i class="fa fa-search"></i></button><br/><br/>
+<div id="tableDiv"></div>
+<div id="ArticleDiv"></div>
+<script>
+  var resultData="";
+function callDetail(){   
+  $('#ArticleDiv').hide(); 
+  $('#tableDiv').show();
+var name=$('#SearchVal').val();
+var datas={'name':name};
+$.ajax({
+url:"http://localhost:9000/Search",
+type: "POST",
+data:datas,
+success: function(result){
+    var content="<br/><br/>";
+    var res=result.res;
+    content+="<h3>Profile Details</h3>";
+    content+="<table>";
+        for(var i=0; i<res.length;i++){
+        content+="<tr>";
+            content+="<td>name :</td>";
+            content+="<td id='name"+i+"'>"+res[i].name+"</td>";
+        content+="</tr>"
+        content+="<tr>";
+            content+="<td>email :</td>";
+            content+="<td id='email"+i+"'>"+res[i].email+"</td>";
+        content+="</tr>"
+        content+="<tr>";
+            content+="<td><input type='submit' value='Click to view followers List' onclick='followersList("+i+")'></td>";
+            content+="<td id='List"+i+"'></td>";
+        content+="</tr>";
+        content+="<tr>";
+            content+="<td><input type='submit' value='Click to view Articles' onclick='ArticleList("+i+")'></td>";
+            content+="<td id='ArticleList"+i+"'></td>"
+        content+="</tr>";
+        content+="<tr><td>Click to follow: </td> <td><input type='submit' value='follow' onclick='follow("+i+")'></td></tr>";
+        content+="<tr></tr>";
+        content+="<tr></tr>";
+        }    
+    content+="<tr><td><h5>Total Search Found: </h5></td><td><h5 id='len'>"+res.length+"</h5></td></tr>";
+    content+="</table>";
+    $('#tableDiv').html("");
+    $('#tableDiv').append(content);
+
+},
+error:function(error){
+    alert("error");
+}
+})
+}
+function follow(i){
+  var email=$('#email'+i).text();
+  datas={'email':email};
+  $.ajax({
+url:"http://localhost:9000/update",
+type: "POST",
+data:datas,
+success: function(result){
+       alert(result);
+    },
+error: function(error){
+    alert(result);
+}
+})
+}
+function followersList(i){
+  var email=$('#email'+i).text();
+  datas={'email':email};
+  $.ajax({
+url:"http://localhost:9000/followList",
+type: "POST",
+data:datas,
+success: function(result){
+  var content="";
+  if(result!="Not found"){
+       for(var j=0; j<result.res.length;j++){
+        content+=result.res[j].follower +"  ";
+       }
+       $('#List'+i).text(content);
+      }
+      else
+       {
+         alert(result);
+       }
+       
+    },
+error: function(error){
+    alert(result);
+}
+})
+}
+function ArticleList(i){
+  var email=$('#email'+i).text();
+  datas={'email':email};
+  $.ajax({
+url:"http://localhost:9000/ArticleList",
+type: "POST",
+data:datas,
+success: function(result){
+  var content="";
+     if(result!="Not found"){
+      resultData=result;
+       for(var j=0; j<result.res.length; j++){
+        content+="<p id="+j+" onclick='viewArticle("+j+")'><u>Article"+j+"(click to view)</u></p><br/>";
+       }
+       $('#ArticleList'+i).append(content);
+      }
+      else{
+        alert(result);
+      }
+       
+    },
+error: function(error){
+    alert(result);
+}
+})
+}
+function viewArticle(j){
+
+  $('#tableDiv').hide();
+  $('#ArticleDiv').hide();
+  var content=resultData.res[j].content;
+  var heading=resultData.res[j].head;
+  var previewContent="<h1 id='head' style='text-align:center'>"+heading+"</h1>";
+             previewContent+="<br/><br/>";
+             previewContent+="<p id='body' style='font-size:30px'>"+content+"</p>";
+             previewContent+="<input type='submit' value='Back' onclick='back()'> "
+  $('#ArticleDiv').html('');
+  $('#ArticleDiv').append(previewContent);
+  $('#ArticleDiv').show();
+  $('#ArticleDiv').display='block';
+}
+function back(){
+            $('#ArticleDiv').hide();
+            $("#tableDiv").show();
+          }
+</script>
+</body>
+</html> 
