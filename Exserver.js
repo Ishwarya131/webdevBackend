@@ -58,3 +58,4 @@ app.post('/ArticleList',function(req,res){
    console.log("ajax call for getting Articles")
      getFromTable.getArticles(req,res)
 });
+
